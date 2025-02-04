@@ -11,3 +11,5 @@ $PSReadLineOptions = @{
     }
 }
 Set-PSReadLineOption @PSReadLineOptions
+
+Start-Process -FilePath "C:\Users\elica\AppData\Local\PowerToys\PowerToys.exe" -Verb RunAs
