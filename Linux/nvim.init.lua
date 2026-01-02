@@ -1023,5 +1023,14 @@ require("lazy").setup({
 	},
 })
 
+-- Add custom C++ extensions
+vim.filetype.add({
+	extension = {
+		tpp = "cpp",
+		ipp = "cpp",
+		tcc = "cpp",
+	},
+})
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
