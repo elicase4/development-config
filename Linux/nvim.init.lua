@@ -514,6 +514,23 @@ require("lazy").setup({
 			--    That is to say, every time a new file is opened that is associated with
 			--    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
 			--    function will be executed to configure the current buffer
+
+			-- Disable diagnostics for template implementation files (.tpp/.ipp/.inl)
+			vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
+				pattern = { "*.tpp", "*.ipp", "*.inl", "*.tcc" },
+				callback = function(args)
+					local bufnr = args.buf
+
+					if vim.diagnostic and vim.diagnostic.disable then
+						-- Neovim 0.10+
+						vim.diagnostic.disable(bufnr)
+					else
+						-- Neovim 0.9.x
+						vim.diagnostic.hide(nil, bufnr)
+					end
+				end,
+			})
+
 			vim.api.nvim_create_autocmd("LspAttach", {
 				group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
 				callback = function(event)
@@ -645,7 +662,17 @@ require("lazy").setup({
 			--  - settings (table): Override the default settings passed when initializing the server.
 			--        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
 			local servers = {
-				clangd = {},
+				clangd = {
+					cmd = {
+						"clangd",
+						"--background-index",
+						"--completion-style=detailed",
+						"--header-insertion=never",
+						"--clang-tidy=false",
+						"--fallback-style=none",
+					},
+					filetypes = { "c", "cpp", "objc", "objcpp", "cuda" },
+				},
 				-- gopls = {},
 				pyright = {},
 				-- rust_analyzer = {},
