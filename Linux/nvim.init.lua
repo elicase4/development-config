@@ -171,6 +171,25 @@ vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 -- Diagnostic keymaps
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
 
+-- Silence clangd "invalid AST" messages (they are not diagnostics)
+local orig_handler = vim.lsp.handlers["window/showMessage"]
+
+vim.lsp.handlers["window/showMessage"] = function(err, result, ctx, config)
+	local client = vim.lsp.get_client_by_id(ctx.client_id)
+
+	if
+		client
+		and client.name == "clangd"
+		and result
+		and type(result.message) == "string"
+		and result.message:match("invalid AST")
+	then
+		return
+	end
+
+	return orig_handler(err, result, ctx, config)
+end
+
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
 -- is not what someone will guess without a bit more experience.
