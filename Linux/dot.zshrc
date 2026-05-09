@@ -107,4 +107,4 @@ export EDITOR='nvim'
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 # OpenFoam 2412 Setup
-. /usr/lib/openfoam/openfoam2412/etc/bashrc
+# . /usr/lib/openfoam/openfoam2412/etc/bashrc
